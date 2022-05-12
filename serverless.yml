@@ -1,0 +1,103 @@
+# Welcome to Serverless!
+#
+# This file is the main config file for your service.
+# It's very minimal at this point and uses default values.
+# You can always add more config options for more control.
+# We've included some commented out config examples here.
+# Just uncomment any of them to get that config option.
+#
+# For full config options, check the docs:
+#    docs.serverless.com
+#
+# Happy Coding!
+
+service: lambda-svg-webfont-automation
+
+# You can pin your service to only deploy with a specific Serverless version
+# Check out our docs for more details
+frameworkVersion: ">=1.1.0"
+
+# Custom configuration
+custom:
+  bucket_name: svg-2-webfont
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  timeout: 60 # optional, in seconds, default is 6
+  versionFunctions: false # optional, default is true
+
+# you can overwrite defaults here
+  stage: dev
+  region: us-west-2
+
+# you can add statements to the Lambda function's IAM Role here
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "s3:ListBucket"
+        - "s3:Put*"
+        - "s3:GetObject"
+      Resource:
+        - "arn:aws:s3:::${self:custom.bucket_name}"
+        - "arn:aws:s3:::${self:custom.bucket_name}/*"
+
+functions:
+  generateWebfont:
+    handler: handler.generateWebfont
+    events:
+      - s3:
+          bucket: fonts
+          events:
+            - s3:ObjectCreated:*
+          rules:
+            - suffix: .svg
+
+resources:
+  Resources:
+    S3BucketFonts:
+      Type: AWS::S3::Bucket
+      Properties:
+        AccessControl: PublicRead
+        BucketName: ${self:custom.bucket_name}
+        CorsConfiguration:
+          CorsRules:
+          - AllowedOrigins:
+            - "*"
+            AllowedMethods:
+            - "GET"
+
+    S3BucketFontsPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        Bucket:
+          Ref: S3BucketFonts
+        PolicyDocument:
+          Statement:
+          - Sid: PublicReadGetObject
+            Effect: Allow
+            Principal: "*"
+            Action:
+            - s3:GetObject
+            Resource:
+              Fn::Join: [
+                "", [
+                "arn:aws:s3:::",
+                {
+                  "Ref": "S3BucketFonts"
+                },
+                "/*"
+              ]
+              ]
+    GenerateWebfontLambdaPermissionFontsS3:
+      Type: "AWS::Lambda::Permission"
+      Properties:
+        FunctionName:
+          "Fn::GetAtt":
+          - GenerateWebfontLambdaFunction
+          - Arn
+        Principal: "s3.amazonaws.com"
+        Action: "lambda:InvokeFunction"
+        SourceAccount:
+          Ref: AWS::AccountId
+        SourceArn: "arn:aws:s3:::${self:custom.bucket_name}"
