@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{fontName}}</title>
+    <style>
+            {{{styles}}}
+    </style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
+<div class="container my-5">
+    <h1 class="display-1">{{fontName}}</h1>
+
+    <p class="lead">
+        To use this icon font, add the CSS file to your <strong>HTML page head</strong>. <br>
+        <code>&lt;link rel="stylesheet" href="{{bucket}}{{fontName}}.css"&gt;</code>
+        or <strong>import in your SCSS file</strong>
+        <code>@import url({{bucket}}{{fontName}}.css);</code>
+    </p>
+
+    <div class="row">
+        {{#each names}}
+            <div class="col-sm-2">
+                <div class="card text-center mb-2" style="width: 100%;">
+                    <div class="card-body">
+                        <h1 class="card-title text-center my-3">
+                            <span class="icon {{../classPrefix}}{{this}}"></span>
+                        </h1>
+                        <h6 class="card-subtitle mb-2 text-muted">{{this}}</h6>
+                        <p><code>icon {{../classPrefix}}{{this}}</code></p>
+                    </div>
+                </div>
+            </div>
+        {{/each}}
+    </div>
+
+
+    <div class="my-3">
+        <h2>Available files</h2>
+        <table class="table">
+            <tbody>
+            <tr>
+                <th scope="row">HTML</th>
+                <td><a href="{{bucket}}{{fontName}}.html">{{bucket}}{{fontName}}.html</a></td>
+            </tr>
+            <tr>
+                <th scope="row">CSS</th>
+                <td><a href="{{bucket}}{{fontName}}.css">{{bucket}}{{fontName}}.css</a></td>
+            </tr>
+            <tr>
+                <th scope="row">EOT</th>
+                <td><a href="{{bucket}}{{fontName}}.eot">{{bucket}}{{fontName}}.eot</a></td>
+            </tr>
+            <tr>
+                <th scope="row">JSON</th>
+                <td><a href="{{bucket}}{{fontName}}.json">{{bucket}}{{fontName}}.json</a></td>
+            </tr>
+            <tr>
+                <th scope="row">TTF</th>
+                <td><a href="{{bucket}}{{fontName}}.ttf">{{bucket}}{{fontName}}.ttf</a></td>
+            </tr>
+            <tr>
+                <th scope="row">WOFF</th>
+                <td><a href="{{bucket}}{{fontName}}.woff">{{bucket}}{{fontName}}.woff</a></td>
+            </tr>
+            <tr>
+                <th scope="row">WOFF2</th>
+                <td><a href="{{bucket}}{{fontName}}.woff2">{{bucket}}{{fontName}}.woff2</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
